@@ -60,7 +60,10 @@ def get_data(url, city):
 
             soup = BeautifulSoup(src, 'lxml')
             # Определяем последнюю страницу с товаром в каталоге.
-            page_last = soup.find('div', class_='module-pagination').find_all('a', class_='dark_link')[-1].text
+            try:
+                page_last = soup.find('div', class_='module-pagination').find_all('a', class_='dark_link')[-1].text
+            except Exception as ex:
+                page_last = 1
 
             # Создаем цикл с товаром и начинаем парсить.
 
