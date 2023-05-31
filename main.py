@@ -60,10 +60,13 @@ def get_data(url, city):
 
             soup = BeautifulSoup(src, 'lxml')
             # Определяем последнюю страницу с товаром в каталоге.
-            try:
-                page_last = soup.find('div', class_='module-pagination').find_all('a', class_='dark_link')[-1].text
-            except Exception as ex:
+            if 'provoloka_svarochnaya/' in href:
                 page_last = 1
+            else:
+                try:
+                    page_last = soup.find('div', class_='module-pagination').find_all('a', class_='dark_link')[-1].text
+                except Exception as ex:
+                    page_last = 1
 
             # Создаем цикл с товаром и начинаем парсить.
 
@@ -625,14 +628,14 @@ def main():
         os.mkdir(f'files')
 
     for j in range(0, len(city_list)):
-        if city_list[j] == 'https://chelyabinsk.russteels.ru/':
-            city = 'Челябинск'
+        if city_list[j] == 'https://novorossijsk.russteels.ru/':
+            city = 'Новороссийск'
         elif city_list[j] == 'https://voronezh.russteels.ru/':
             city = 'Воронеж'
         elif city_list[j] == 'https://krasnodar.russteels.ru/':
             city = 'Краснодар'
-        elif city_list[j] == 'https://novorossijsk.russteels.ru/':
-            city = 'Новороссийск'
+        elif city_list[j] == 'https://chelyabinsk.russteels.ru/':
+            city = 'Челябинск'
         elif city_list[j] == 'https://nalchik.russteels.ru/':
             city = 'Нальчик'
         elif city_list[j] == 'https://nn.russteels.ru/':
