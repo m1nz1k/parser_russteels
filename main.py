@@ -38,9 +38,72 @@ def get_data(url, city):
     # Заходим в каждую категорию и начинаем парсить.
     for amount_category in amount_categories:
         href = url + amount_category.find('a').get('href').replace('/', '', 1)
-        if 'tsvetnoy_metall' in href:
-            continue
         try:
+            if 'tsvetnoy_metall' in href:
+                req = requests.get(url=href, headers=headers)
+                folder_name_category = href.split('/')[-2]
+                if os.path.exists(f'data/{folder_name}/{folder_name_category}'):
+                    print("Папка уже существует!")
+                else:
+                    os.mkdir(f'data/{folder_name}/{folder_name_category}')
+
+                with open(f"data/{folder_name}/{folder_name_category}/{folder_name_category}.html", "w",
+                          encoding="utf-8") as file:
+                    file.write(req.text)
+
+                with open(f"data/{folder_name}/{folder_name_category}/{folder_name_category}.html",
+                          encoding="utf-8") as file:
+                    src = file.read()
+                soup = BeautifulSoup(src, 'lxml')
+                all_products = soup.find_all('div', class_='simple-item')
+                for product in all_products:
+                    info_list = []
+                    main_section = ''
+                    two_section = ''
+                    three_section = ''
+                    product_size = ''
+                    try:
+                        product_name = product.find('div', class_='simple-item_name').text
+                        product_full_price = product.find('div', class_='simple-item_price').text
+                    except:
+                        product_name = ''
+                        product_full_price = ''
+                    product_marka = ''
+                    product_lenght = ''
+                    availability = ''
+                    product_measure = ''
+                    product_gost = ''
+                    product_weight = ''
+                    product_hight = ''
+                    product_width = ''
+                    product_surface = ''
+                    product_delivery = ''
+                    product_type = ''
+                    product_side = ''
+                    info_list.append(main_section)
+                    info_list.append(two_section)
+                    info_list.append(three_section)
+                    info_list.append(product_size)
+                    info_list.append(product_name)
+                    info_list.append(product_marka)
+                    info_list.append(product_lenght)
+                    info_list.append(product_full_price)
+                    info_list.append(availability)
+                    info_list.append(product_measure)
+                    info_list.append(product_gost)
+                    info_list.append(product_weight)
+                    info_list.append(product_hight)
+                    info_list.append(product_width)
+                    info_list.append(product_surface)
+                    info_list.append(product_delivery)
+                    info_list.append(product_type)
+                    info_list.append(product_side)
+                    with open(f'files/{city}.csv', 'a', encoding='utf-8', newline="") as file:
+                        writer = csv.writer(file, delimiter=";")
+                        writer.writerow(info_list)
+                continue
+
+
             if 'truby_nerzhaveyushchie' in href:
 
                 amount += 1
@@ -638,7 +701,15 @@ def main():
         os.mkdir(f'files')
 
     for j in range(0, len(city_list)):
-        if city_list[j] == 'https://nalchik.russteels.ru/':
+        if city_list[j] == 'https://chelyabinsk.russteels.ru/':
+            city = 'Челябинск'
+        elif city_list[j] == 'https://voronezh.russteels.ru/':
+            city = 'Воронеж'
+        elif city_list[j] == 'https://krasnodar.russteels.ru/':
+            city = 'Краснодар'
+        elif city_list[j] == 'https://novorossijsk.russteels.ru/':
+            city = 'Новороссийск'
+        elif city_list[j] == 'https://nalchik.russteels.ru/':
             city = 'Нальчик'
         elif city_list[j] == 'https://nn.russteels.ru/':
             city = 'Нижний Новгород'
