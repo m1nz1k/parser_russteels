@@ -692,8 +692,8 @@ def get_data(url, city):
 def main():
 
     # Список городов
-    city_list = ['https://nalchik.russteels.ru/', 'https://nn.russteels.ru/', 'https://novosibirsk.russteels.ru/', 'https://pyatigorsk.russteels.ru/',
-                 'https://samara.russteels.ru/', 'https://spb.russteels.ru/', 'https://ufa.russteels.ru/', 'https://cheboksary.russteels.ru/', 'https://www.russteels.ru/']
+    city_list = ['https://www.russteels.ru/', 'https://chelyabinsk.russteels.ru/', 'https://voronezh.russteels.ru/',
+                 'https://novorossijsk.russteels.ru/', 'https://cheboksary.russteels.ru/']
 
     if os.path.exists(f'files'):
         print("Папка уже существует!")
@@ -701,32 +701,16 @@ def main():
         os.mkdir(f'files')
 
     for j in range(0, len(city_list)):
-        if city_list[j] == 'https://chelyabinsk.russteels.ru/':
+        if city_list[j] == 'https://www.russteels.ru/':
+            city = 'Москва'
+        elif city_list[j] == 'https://chelyabinsk.russteels.ru/':
             city = 'Челябинск'
         elif city_list[j] == 'https://voronezh.russteels.ru/':
             city = 'Воронеж'
-        elif city_list[j] == 'https://krasnodar.russteels.ru/':
-            city = 'Краснодар'
         elif city_list[j] == 'https://novorossijsk.russteels.ru/':
             city = 'Новороссийск'
-        elif city_list[j] == 'https://nalchik.russteels.ru/':
-            city = 'Нальчик'
-        elif city_list[j] == 'https://nn.russteels.ru/':
-            city = 'Нижний Новгород'
-        elif city_list[j] == 'https://novosibirsk.russteels.ru/':
-            city = 'Новосибирск'
-        elif city_list[j] == 'https://pyatigorsk.russteels.ru/':
-            city = 'Пятигорск'
-        elif city_list[j] == 'https://samara.russteels.ru/':
-            city = 'Самара'
-        elif city_list[j] == 'https://spb.russteels.ru/':
-            city = 'Санкт-Петербург'
-        elif city_list[j] == 'https://ufa.russteels.ru/':
-            city = 'Уфа'
         elif city_list[j] == 'https://cheboksary.russteels.ru/':
-            city = 'Краснодар'
-        elif city_list[j] == 'https://www.russteels.ru/':
-            city = 'Москва'
+            city = 'Cheboksari'
 
 
         with open(f'files/{city}.csv', 'w', encoding='utf-8', newline="") as file:
