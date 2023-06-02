@@ -2,6 +2,36 @@ import requests
 from bs4 import BeautifulSoup
 import os.path
 import csv
+import pandas as pd
+
+
+def get_save():
+    # Путь к папке с CSV файлами
+    folder_path = 'files/'
+
+    # Создаем новый Excel файл
+    excel_file = pd.ExcelWriter('output.xlsx', engine='xlsxwriter')
+
+    # Получаем список файлов в папке
+    file_list = os.listdir(folder_path)
+
+    # Проходимся по каждому файлу
+    for file_name in file_list:
+        # Проверяем расширение файла (допустим, что все файлы в папке - CSV)
+        if file_name.endswith('.csv'):
+            # Читаем CSV файл в DataFrame
+            file_path = os.path.join(folder_path, file_name)
+            df = pd.read_csv(file_path, delimiter=';')
+
+            # Имя листа в Excel соответствует имени файла без расширения
+            sheet_name = os.path.splitext(file_name)[0]
+
+            # Записываем DataFrame в Excel лист
+            df.to_excel(excel_file, sheet_name=sheet_name, index=False)
+
+    # Сохраняем и закрываем Excel файл
+    excel_file._save()
+    excel_file.close()
 
 
 def get_data(url, city):
@@ -36,7 +66,7 @@ def get_data(url, city):
     amount_categories = catalog_content.find_all('li', class_='name')
     amount = 0 # Создаем количество категорий. Блоком кода ниже за каждую ссылку прибавляем к значению +1.
     # Заходим в каждую категорию и начинаем парсить.
-    for amount_category in amount_categories:
+    for amount_category in amount_categories[6:8]:
         href = url + amount_category.find('a').get('href').replace('/', '', 1)
         try:
             if 'tsvetnoy_metall' in href:
@@ -692,25 +722,51 @@ def get_data(url, city):
 def main():
 
     # Список городов
-    city_list = ['https://www.russteels.ru/', 'https://chelyabinsk.russteels.ru/', 'https://voronezh.russteels.ru/',
-                 'https://novorossijsk.russteels.ru/', 'https://cheboksary.russteels.ru/']
+    city_list = []
+    with open('urls.txt', 'r') as file:
+        # Читаем файл построчно
+        for line in file:
+            line = line.strip()
+            city_list.append(line)
 
     if os.path.exists(f'files'):
         print("Папка уже существует!")
     else:
         os.mkdir(f'files')
+    if os.path.exists(f'data'):
+        print("Папка уже существует!")
+    else:
+        os.mkdir(f'data')
+    print(city_list)
 
     for j in range(0, len(city_list)):
-        if city_list[j] == 'https://www.russteels.ru/':
-            city = 'Москва'
-        elif city_list[j] == 'https://chelyabinsk.russteels.ru/':
+        if city_list[j] == 'https://chelyabinsk.russteels.ru/':
             city = 'Челябинск'
         elif city_list[j] == 'https://voronezh.russteels.ru/':
             city = 'Воронеж'
+        elif city_list[j] == 'https://krasnodar.russteels.ru/':
+            city = 'Краснодар'
         elif city_list[j] == 'https://novorossijsk.russteels.ru/':
             city = 'Новороссийск'
+        elif city_list[j] == 'https://nalchik.russteels.ru/':
+            city = 'Нальчик'
+        elif city_list[j] == 'https://nn.russteels.ru/':
+            city = 'Нижний Новгород'
+        elif city_list[j] == 'https://novosibirsk.russteels.ru/':
+            city = 'Новосибирск'
+        elif city_list[j] == 'https://pyatigorsk.russteels.ru/':
+            city = 'Пятигорск'
+        elif city_list[j] == 'https://samara.russteels.ru/':
+            city = 'Самара'
+        elif city_list[j] == 'https://spb.russteels.ru/':
+            city = 'Санкт-Петербург'
+        elif city_list[j] == 'https://ufa.russteels.ru/':
+            city = 'Уфа'
         elif city_list[j] == 'https://cheboksary.russteels.ru/':
-            city = 'Cheboksari'
+            city = 'Чебоксары'
+        elif city_list[j] == 'https://russteels.ru/':
+            city = 'Москва'
+
 
 
         with open(f'files/{city}.csv', 'w', encoding='utf-8', newline="") as file:
@@ -723,6 +779,8 @@ def main():
         print(f'Начал парсить город: {city}')
 
         get_data(f'{city_list[j]}', city)
+    get_save()
+    print('Парсинг завершен.')
 
 if __name__ == '__main__':
     main()
