@@ -66,7 +66,7 @@ def get_data(url, city):
     amount_categories = catalog_content.find_all('li', class_='name')
     amount = 0 # Создаем количество категорий. Блоком кода ниже за каждую ссылку прибавляем к значению +1.
     # Заходим в каждую категорию и начинаем парсить.
-    for amount_category in amount_categories[6:8]:
+    for amount_category in amount_categories:
         href = url + amount_category.find('a').get('href').replace('/', '', 1)
         try:
             if 'tsvetnoy_metall' in href:
@@ -716,8 +716,6 @@ def get_data(url, city):
                             f'Категория: {amount}. Страница {i} из {page_last}. Продукт номер {product_counters} из {page_products}')
         except Exception:
             continue
-
-
 
 def main():
 
