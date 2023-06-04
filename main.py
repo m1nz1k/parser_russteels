@@ -88,7 +88,7 @@ def get_data(url, city):
                 all_products = soup.find_all('div', class_='simple-item')
                 for product in all_products:
                     info_list = []
-                    main_section = ''
+                    main_section = 'Цветные Металлы'
                     two_section = ''
                     three_section = ''
                     product_size = ''
